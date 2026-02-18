@@ -23,14 +23,24 @@ nonebot-plugin-mbtistats = { path = "./dev-plugins/mbtistats", editable = true }
 
 
 [tool.nonebot]
-adapters = [
-    { name = "QQ", module_name = "nonebot.adapters.qq" },
-    { name = "Console", module_name = "nonebot.adapters.console" },
-    { name = "OneBot V11", module_name = "nonebot.adapters.onebot.v11" }
-]
 plugin_dirs = ["dev-plugins"]
 builtin_plugins = ["echo", "single_session"]
-plugins = [
-    "nonebot_plugin_analysis_bilibili",
-    "nonebot_plugin_questionmark"
+
+
+[tool.nonebot.adapters]
+nonebot-adapter-qq = [
+    { name = "QQ", module_name = "nonebot.adapters.qq" }
 ]
+nonebot-adapter-console = [
+    { name = "Console", module_name = "nonebot.adapters.console" }
+]
+nonebot-adapter-onebot = [
+    { name = "OneBot V11", module_name = "nonebot.adapters.onebot.v11" }
+]
+"@local" = []
+
+
+[tool.nonebot.plugins]
+"@local" = []
+"nonebot-plugin-analysis-bilibili" = ["nonebot_plugin_analysis_bilibili"]
+"nonebot-plugin-questionmark" = ["nonebot_plugin_questionmark"]

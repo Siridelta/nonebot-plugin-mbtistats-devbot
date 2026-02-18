@@ -1,6 +1,6 @@
 # MBTI Stats Bot - 开发环境
 
-这是 `nonebot-plugin-mbtistats` 插件的开发和测试环境仓库。
+这是 `nonebot-plugin-mbtistats` 插件的开发和测试环境仓库，兼作整机部署（部署整个 Bot 的场景，如家庭服务器、SCF、Docker等）的内容。
 
 本仓库支持两种部署/运行场景：
 - **场景 A：腾讯云云函数 (SCF)** - 需要 Docker 容器化部署整个 Bot

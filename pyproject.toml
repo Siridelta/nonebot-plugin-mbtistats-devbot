@@ -39,7 +39,6 @@ nonebot-adapter-onebot = [
 
 
 [tool.nonebot.plugins]
-"@local" = []
+"@local" = ["nonebot_plugin_mbtistats"]
 "nonebot-plugin-analysis-bilibili" = ["nonebot_plugin_analysis_bilibili"]
 "nonebot-plugin-questionmark" = ["nonebot_plugin_questionmark"]
-"nonebot-plugin-mbtistats" = ["nonebot_plugin_mbtistats"]

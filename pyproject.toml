@@ -23,7 +23,6 @@ nonebot-plugin-mbtistats = { path = "./dev-plugins/mbtistats", editable = true }
 
 
 [tool.nonebot]
-plugin_dirs = ["dev-plugins"]
 builtin_plugins = ["echo", "single_session"]
 
 

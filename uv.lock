@@ -1,5 +1,5 @@
 version = 1
-revision = 2
+revision = 3
 requires-python = "==3.13.*"
 
 [[package]]
@@ -486,7 +486,7 @@ dependencies = [
     { name = "nonebot-adapter-onebot" },
     { name = "nonebot-adapter-qq" },
     { name = "nonebot-plugin-analysis-bilibili" },
-    { name = "nonebot-plugin-apscheduler" },
+    { name = "nonebot-plugin-mbtistats" },
     { name = "nonebot-plugin-questionmark" },
     { name = "nonebot2", extra = ["fastapi", "httpx", "websockets"] },
     { name = "playwright" },
@@ -499,7 +499,7 @@ requires-dist = [
     { name = "nonebot-adapter-onebot", specifier = ">=2.4.6" },
     { name = "nonebot-adapter-qq", specifier = ">=1.6.6" },
     { name = "nonebot-plugin-analysis-bilibili", specifier = ">=2.8.1" },
-    { name = "nonebot-plugin-apscheduler", specifier = ">=0.5.0" },
+    { name = "nonebot-plugin-mbtistats", editable = "dev-plugins/mbtistats" },
     { name = "nonebot-plugin-questionmark", specifier = ">=0.4.1" },
     { name = "nonebot2", extras = ["fastapi", "httpx", "websockets"], specifier = ">=2.4.4" },
     { name = "playwright", specifier = ">=1.56.0" },
@@ -660,6 +660,29 @@ sdist = { url = "https://files.pythonhosted.org/packages/d6/53/019bfea58c506c016
 wheels = [
     { url = "https://files.pythonhosted.org/packages/fb/f4/8a3334dcd91e368d2f4e2b21f4805ac70b5dd8a1f9dac94fea5269e82bd3/nonebot_plugin_apscheduler-0.5.0-py3-none-any.whl", hash = "sha256:8b99b5ee60c4bc195d4df2fd27dab3d6963691e3332f6cee31a06eb4277c307f", size = 4307, upload-time = "2024-06-28T13:17:09.593Z" },
 ]
+
+[[package]]
+name = "nonebot-plugin-mbtistats"
+version = "0.1.0"
+source = { editable = "dev-plugins/mbtistats" }
+dependencies = [
+    { name = "jinja2" },
+    { name = "nonebot-adapter-onebot" },
+    { name = "nonebot-plugin-apscheduler" },
+    { name = "nonebot2" },
+    { name = "playwright" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "jinja2", specifier = ">=3.1.6" },
+    { name = "nonebot-adapter-onebot", specifier = ">=2.4.0" },
+    { name = "nonebot-adapter-qq", marker = "extra == 'qq-adapter'", specifier = ">=1.6.0" },
+    { name = "nonebot-plugin-apscheduler", specifier = ">=0.5.0" },
+    { name = "nonebot2", specifier = ">=2.4.0" },
+    { name = "playwright", specifier = ">=1.56.0" },
+]
+provides-extras = ["qq-adapter"]
 
 [[package]]
 name = "nonebot-plugin-questionmark"

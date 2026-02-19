@@ -671,6 +671,7 @@ dependencies = [
     { name = "nonebot-plugin-apscheduler" },
     { name = "nonebot2" },
     { name = "playwright" },
+    { name = "pydantic" },
 ]
 
 [package.metadata]
@@ -681,6 +682,7 @@ requires-dist = [
     { name = "nonebot-plugin-apscheduler", specifier = ">=0.5.0" },
     { name = "nonebot2", specifier = ">=2.4.0" },
     { name = "playwright", specifier = ">=1.56.0" },
+    { name = "pydantic", specifier = ">=2.0" },
 ]
 provides-extras = ["qq-adapter"]
 

@@ -131,6 +131,17 @@ git add dev-plugins/mbtistats
 git commit -m "update: sync plugin submodule"
 ```
 
+### 前端调试
+
+使用调试脚本预览模板效果：
+
+```bash
+# 调试 mbti-stats 模板
+uv run scripts/debug_frontend.py mbti-stats
+```
+
+**mock.json 格式**：模板目录下的 `mock.json` 使用**后端数据格式**（时间序列列表），脚本会自动调用 `transform_render_data.py` 转换为前端渲染格式。调试时可直接从 `data/mbtistats/data/v1/{group_id}/stats-data.json` 复制数据。
+
 ## 文档
 
 - **插件业务逻辑/API/模板**：见 `dev-plugins/mbtistats/CONTEXT.md`

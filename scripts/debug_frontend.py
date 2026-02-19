@@ -1,3 +1,16 @@
+"""
+前端页面开发调试工具
+
+用法：
+    uv run scripts/debug_frontend.py [mode]
+
+说明：
+    - 从 dev-plugins/mbtistats/src/nonebot_plugin_mbtistats/template/ 加载模板
+    - 从 template/{mode}/mock.json 加载后端格式的数据
+    - 即时转换为前端渲染格式
+    - 监听文件变化并自动重绘
+"""
+
 import argparse
 import time
 import json
@@ -5,27 +18,109 @@ import sys
 from pathlib import Path
 from jinja2 import Environment, FileSystemLoader
 
+# 计算路径
+# scripts/debug_frontend.py -> project_root/scripts/ -> project_root/
+project_root = Path(__file__).parent.parent.resolve()
+
+
+# 导入数据转换函数
+# 由于插件 __init__.py 会初始化 NoneBot，我们需要直接加载模块
+def _load_transform_module():
+    """直接加载 transform_render_data 模块，避免触发插件初始化"""
+    import importlib.util
+
+    transform_py_path = (
+        project_root
+        / "dev-plugins"
+        / "mbtistats"
+        / "src"
+        / "nonebot_plugin_mbtistats"
+        / "transform_render_data.py"
+    )
+
+    if not transform_py_path.exists():
+        return None
+
+    spec = importlib.util.spec_from_file_location(
+        "transform_render_data", transform_py_path
+    )
+    module = importlib.util.module_from_spec(spec)
+    sys.modules["transform_render_data"] = module
+    spec.loader.exec_module(module)
+    return module
+
+
+_transform_module = _load_transform_module()
+if _transform_module is None:
+    print("❌ 无法加载 transform_render_data 模块")
+    sys.exit(1)
+
+transform_to_render_data = _transform_module.transform_to_render_data
+
+
 # 配置
 TEMPLATE_DIR_NAME = "template"
 MOCK_FILE_NAME = "mock.json"
 INDEX_FILE_NAME = "index.html"
 PREVIEW_FILE_NAME = "preview.html"
 
-# 设置环境
-root_dir = Path(__file__).parent
-template_base_dir = root_dir / TEMPLATE_DIR_NAME
+# 插件模板目录: dev-plugins/mbtistats/src/nonebot_plugin_mbtistats/template/
+template_base_dir = (
+    project_root
+    / "dev-plugins"
+    / "mbtistats"
+    / "src"
+    / "nonebot_plugin_mbtistats"
+    / TEMPLATE_DIR_NAME
+)
+
 env = Environment(loader=FileSystemLoader(template_base_dir))
+
 
 def get_available_modes():
     """扫描 template 目录，返回所有包含 index.html 的子目录名"""
     modes = []
     if not template_base_dir.exists():
         return modes
-    
+
     for path in template_base_dir.iterdir():
         if path.is_dir() and (path / INDEX_FILE_NAME).exists():
             modes.append(path.name)
     return modes
+
+
+def load_mock_data(mock_path: Path) -> dict:
+    """
+    加载 Mock 数据并转换为前端渲染格式。
+
+    mock.json 现在存储后端格式的数据，需要即时转换为前端格式。
+    """
+    if not mock_path.exists():
+        print(f"❌ 未找到 Mock 数据文件: {mock_path}")
+        return None
+
+    try:
+        with open(mock_path, "r", encoding="utf-8") as f:
+            backend_data = json.load(f)
+
+        # 后端格式是列表（时间序列数据）
+        if isinstance(backend_data, list):
+            print(f"📊 正在转换为前端渲染格式...")
+            render_data = transform_to_render_data(history_data=backend_data)
+            print(f"✅ 数据转换完成: {len(backend_data)} 条历史记录")
+            return render_data
+
+        else:
+            print(f"❌ 数据格式错误: 期望列表，实际为 {type(backend_data)}")
+            return None
+
+    except json.JSONDecodeError as e:
+        print(f"❌ Mock 数据格式错误: {e}")
+        return None
+    except Exception as e:
+        print(f"❌ 读取或转换 Mock 数据失败: {e}")
+        return None
+
 
 def render_preview(mode):
     """渲染指定模式的页面"""
@@ -34,19 +129,9 @@ def render_preview(mode):
     mock_path = mode_dir / MOCK_FILE_NAME
     output_path = mode_dir / PREVIEW_FILE_NAME
 
-    # 1. 加载 Mock 数据
-    data = {}
-    if not mock_path.exists():
-        print(f"❌ 未找到 Mock 数据文件: {MOCK_FILE_NAME}")
-        return False
-    try:
-        with open(mock_path, "r", encoding="utf-8") as f:
-            data = json.load(f)
-    except json.JSONDecodeError as e:
-        print(f"❌ Mock 数据格式错误 ({MOCK_FILE_NAME}): {e}")
-        return False
-    except Exception as e:
-        print(f"❌ 读取 Mock 数据失败: {e}")
+    # 1. 加载并转换 Mock 数据
+    data = load_mock_data(mock_path)
+    if data is None:
         return False
 
     # 2. 加载模板
@@ -62,7 +147,7 @@ def render_preview(mode):
     except Exception as e:
         print(f"❌ Jinja2 渲染出错: {e}")
         return False
-    
+
     # 4. 输出文件
     try:
         with open(output_path, "w", encoding="utf-8") as f:
@@ -70,11 +155,12 @@ def render_preview(mode):
     except Exception as e:
         print(f"❌ 写入预览文件失败: {e}")
         return False
-    
+
     print(f"✅ [{mode}] 预览已更新: {output_path}")
     return True
 
-def watch_mode(mode):
+
+def watch_mode(mode: str):
     """监听文件变化并自动重绘"""
     mode_dir = template_base_dir / mode
     if not mode_dir.exists():
@@ -85,6 +171,8 @@ def watch_mode(mode):
     print(f"📂 监听目录: {mode_dir}")
     print(f"   - {INDEX_FILE_NAME}")
     print(f"   - {MOCK_FILE_NAME}")
+    print(f"   - script.mjs (如果存在)")
+    print(f"   - style.css (如果存在)")
     print(f"💡 请确保已启动 Live Server 监听 {mode}/{PREVIEW_FILE_NAME}")
 
     # 初始渲染
@@ -93,26 +181,32 @@ def watch_mode(mode):
     # 需要观察的文件列表
     files_to_watch = {
         "index": mode_dir / INDEX_FILE_NAME,
-        "mock": mode_dir / MOCK_FILE_NAME
+        "mock": mode_dir / MOCK_FILE_NAME,
+        "js": mode_dir / "script.mjs",  # 如果存在的话
+        "css": mode_dir / "style.css"       # 如果存在的话
     }
-    
+
     # 存在状态
     last_exists = {
         "index": None,
-        "mock": None
+        "mock": None,
+        "js": None,
+        "css": None
     }
     # 最后修改时间
     last_mtimes = {
         "index": None,
-        "mock": None
+        "mock": None,
+        "js": None,
+        "css": None
     }
 
     try:
         while True:
             needs_render = False
-            
-            for key, file_path in files_to_watch.items():      
-                detected_change = False          
+
+            for key, file_path in files_to_watch.items():
+                detected_change = False
                 try:
                     # 存在状态
                     current_exist = file_path.exists()
@@ -134,37 +228,41 @@ def watch_mode(mode):
                     if last_exist != current_exist:
                         last_exists[key] = current_exist
                         detected_change = True
-                
+
                     if current_mtime != last_mtime:
                         last_mtimes[key] = current_mtime
                         detected_change = True
-                    
+
                     if detected_change:
                         print(f"⚡ 检测到 {file_path.name} 变化...")
                         needs_render = True
-                    
+
                 except OSError:
                     pass
-            
+
             if needs_render:
                 render_preview(mode)
-                
+
             time.sleep(0.5)
 
     except KeyboardInterrupt:
         print("\n🛑 已停止监听")
 
+
 if __name__ == "__main__":
     available_modes = get_available_modes()
-    
-    parser = argparse.ArgumentParser(description="前端页面开发调试工具")
-    parser.add_argument(
-        "mode", nargs="?", 
-        help=f"页面模式 (template/ 模板目录下的子目录名，目前检测到可用模式: {', '.join(available_modes)})"
+
+    parser = argparse.ArgumentParser(
+        description="前端页面开发调试工具",
+        epilog=f"模板目录: {template_base_dir}"
     )
-    
+    parser.add_argument(
+        "mode", nargs="?",
+        help=f"页面模式 (template/ 模板目录下的子目录名，可用模式: {', '.join(available_modes)})"
+    )
+
     args = parser.parse_args()
-    
+
     target_mode = args.mode
 
     # 如果没有指定 mode，或者指定的 mode 不存在
@@ -172,7 +270,7 @@ if __name__ == "__main__":
         if not available_modes:
             print("❌ 在 template/ 目录下未找到任何包含 index.html 的子目录，没有可用模式")
             sys.exit(1)
-        # 默认选择第一个，或者这里可以改为让用户选择
+        # 默认选择 mbti-stats
         if "mbti-stats" in available_modes:
             target_mode = "mbti-stats"
         else:

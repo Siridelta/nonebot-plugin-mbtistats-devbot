@@ -16,6 +16,7 @@ driver.register_adapter(OneBotV11Adapter)
 
 # 加载插件
 nonebot.load_from_toml("pyproject.toml")
+nonebot.load_builtin_plugins("echo", "single_session")
 
 if __name__ == "__main__":
     nonebot.run()

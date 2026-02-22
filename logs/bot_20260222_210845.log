@@ -1,0 +1,8 @@
+2026-02-22 21:08:47 [DEBUG] tzlocal | Looking up time zone info from registry
+2026-02-22 21:08:49 [DEBUG] asyncio | Using proactor: IocpProactor
+2026-02-22 21:08:49 [INFO] uvicorn.error | Started server process [1592]
+2026-02-22 21:08:49 [INFO] uvicorn.error | Waiting for application startup.
+2026-02-22 21:08:51 [INFO] uvicorn.error | Application startup complete.
+2026-02-22 21:08:51 [INFO] uvicorn.error | Uvicorn running on http://127.0.0.1:8080 (Press CTRL+C to quit)
+2026-02-22 21:12:44 [INFO] uvicorn.error | Shutting down
+2026-02-22 21:12:44 [INFO] uvicorn.error | Finished server process [1592]

@@ -1,0 +1,77 @@
+2026-02-22 23:09:03 [SUCCESS] nonebot | 2026-02-22 23:09:03 [SUCCESS] nonebot | NoneBot is initializing...
+2026-02-22 23:09:03 [INFO] nonebot | 2026-02-22 23:09:03 [INFO] nonebot | Current Env: onebotv11-wsRev
+2026-02-22 23:09:03 [DEBUG] nonebot | 2026-02-22 23:09:03 [DEBUG] nonebot | Loaded Config: {'driver': '~fastapi+~httpx+~websockets', 'host': IPv4Address('127.0.0.1'), 'port': 8080, 'log_level': 'INFO', 'api_timeout': 30.0, 'superusers': set(), 'nickname': set(), 'command_start': {'/'}, 'command_sep': {'.'}, 'session_expire_timeout': datetime.timedelta(seconds=120), 'environment': 'onebotv11-wsRev', 'localstore_use_cwd': True, 'onebot_ws_urls': ['ws://127.0.0.1:3001'], 'mbtistats_auto_stats_hour': 0, 'mbtistats_auto_stats_minute': 0, 'analysis_reanalysis_time': 0, 'analysis_display_image': True, 'analysis_enable_search': True, 'analysis_use_on_message': False, 'analysis_trust_env': False, 'ai_enabled': True, 'ai_api_key': 'sk-8d96bd3e257c292b3928a67b9544790eb8e3f0778721dc6380fa3db452fa00c7', 'ai_base_url': 'https://www.hubagi.cn/api/v1', 'ai_model': 'ZP-glm-4.5-flash', 'ai_max_history': 10}
+2026-02-22 23:09:03 [DEBUG] nonebot | 2026-02-22 23:09:03 [DEBUG] nonebot | Succeeded to load adapter "QQ"
+2026-02-22 23:09:03 [DEBUG] nonebot | 2026-02-22 23:09:03 [DEBUG] nonebot | Succeeded to load adapter "Console"
+2026-02-22 23:09:04 [SUCCESS] nonebot | 2026-02-22 23:09:04 [SUCCESS] nonebot | Succeeded to load plugin "nonebot_plugin_apscheduler"
+2026-02-22 23:09:04 [DEBUG] nonebot_plugin_mbtistats | 2026-02-22 23:09:04 [DEBUG] nonebot_plugin_mbtistats | [Config] Bot 根目录: F:\devbot\nonebot-plugin-mbtistats-devbot
+2026-02-22 23:09:04 [DEBUG] nonebot_plugin_mbtistats | 2026-02-22 23:09:04 [DEBUG] nonebot_plugin_mbtistats | [Config] 数据根目录: F:\devbot\nonebot-plugin-mbtistats-devbot\data\mbtistats
+2026-02-22 23:09:04 [INFO] nonebot_plugin_mbtistats | 2026-02-22 23:09:04 [INFO] nonebot_plugin_mbtistats | [AutoStats] 模块加载完成 - DEBUG_MODE=False, RUN_ON_STARTUP=False, SCHEDULE=00:00
+2026-02-22 23:09:05 [SUCCESS] nonebot | 2026-02-22 23:09:05 [SUCCESS] nonebot | Succeeded to load plugin "nonebot_plugin_mbtistats"
+2026-02-22 23:09:05 [SUCCESS] nonebot | 2026-02-22 23:09:05 [SUCCESS] nonebot | Succeeded to load plugin "nonebot_plugin_questionmark"
+2026-02-22 23:09:07 [SUCCESS] nonebot | 2026-02-22 23:09:07 [SUCCESS] nonebot | Succeeded to load plugin "nonebot_plugin_saa"
+2026-02-22 23:09:07 [SUCCESS] nonebot | 2026-02-22 23:09:07 [SUCCESS] nonebot | Succeeded to load plugin "nonebot_plugin_analysis_bilibili"
+2026-02-22 23:09:07 [SUCCESS] nonebot | 2026-02-22 23:09:07 [SUCCESS] nonebot | Succeeded to load plugin "single_session" from "nonebot.plugins.single_session"
+2026-02-22 23:09:07 [INFO] __main__ | 2026-02-22 23:09:07 [INFO] __main__ | Loading plugins from plugins directory...
+2026-02-22 23:09:07 [SUCCESS] nonebot | 2026-02-22 23:09:07 [SUCCESS] nonebot | Succeeded to load plugin "timer_plugin" from "plugins.timer_plugin"
+2026-02-22 23:09:08 [SUCCESS] nonebot | 2026-02-22 23:09:08 [SUCCESS] nonebot | Succeeded to load plugin "ai_chat_plugin" from "plugins.ai_chat_plugin"
+2026-02-22 23:09:08 [SUCCESS] nonebot | 2026-02-22 23:09:08 [SUCCESS] nonebot | Succeeded to load plugin "recall_plugin" from "plugins.recall_plugin"
+2026-02-22 23:09:08 [SUCCESS] nonebot | 2026-02-22 23:09:08 [SUCCESS] nonebot | Succeeded to load plugin "eval_plugin" from "plugins.eval_plugin"
+2026-02-22 23:09:08 [INFO] __main__ | 2026-02-22 23:09:08 [INFO] __main__ | Plugins loaded!
+2026-02-22 23:09:08 [SUCCESS] nonebot | 2026-02-22 23:09:08 [SUCCESS] nonebot | Running NoneBot...
+2026-02-22 23:09:08 [SUCCESS] nonebot | 2026-02-22 23:09:08 [SUCCESS] nonebot | Loaded adapters: QQ, Console
+2026-02-22 23:09:08 [INFO] uvicorn | 2026-02-22 23:09:08 [INFO] uvicorn | Started server process [14096]
+2026-02-22 23:09:08 [INFO] uvicorn | 2026-02-22 23:09:08 [INFO] uvicorn | Waiting for application startup.
+2026-02-22 23:09:08 [INFO] nonebot_plugin_apscheduler | 2026-02-22 23:09:08 [INFO] nonebot_plugin_apscheduler | Scheduler Started
+2026-02-22 23:09:08 [INFO] nonebot_plugin_mbtistats | 2026-02-22 23:09:08 [INFO] nonebot_plugin_mbtistats | 正在启动 Playwright 浏览器内核...
+2026-02-22 23:09:09 [SUCCESS] nonebot | 2026-02-22 23:09:09 [SUCCESS] nonebot | Console mounted.
+2026-02-22 23:09:09 [DEBUG] nonebot_plugin_mbtistats | 2026-02-22 23:09:09 [DEBUG] nonebot_plugin_mbtistats | [AutoStats] 启动时执行已禁用（设置 auto_stats_run_on_startup=true 启用）
+2026-02-22 23:09:10 [INFO] nonebot_plugin_mbtistats | 2026-02-22 23:09:10 [INFO] nonebot_plugin_mbtistats | Playwright 浏览器内核及上下文启动成功
+2026-02-22 23:09:10 [INFO] ai_chat_plugin | 2026-02-22 23:09:10 [INFO] ai_chat_plugin | 开始加载 AI 配置...
+2026-02-22 23:09:10 [INFO] ai_chat_plugin | 2026-02-22 23:09:10 [INFO] ai_chat_plugin | AI_API_KEY: None
+2026-02-22 23:09:10 [INFO] ai_chat_plugin | 2026-02-22 23:09:10 [INFO] ai_chat_plugin | AI_BASE_URL: None
+2026-02-22 23:09:10 [INFO] ai_chat_plugin | 2026-02-22 23:09:10 [INFO] ai_chat_plugin | AI_MODEL: ZP-glm-4.5-flash
+2026-02-22 23:09:10 [INFO] ai_chat_plugin | 2026-02-22 23:09:10 [INFO] ai_chat_plugin | AI_ENABLED: True
+2026-02-22 23:09:10 [INFO] ai_chat_plugin | 2026-02-22 23:09:10 [INFO] ai_chat_plugin | OPENAI_AVAILABLE: True
+2026-02-22 23:09:10 [WARNING] ai_chat_plugin | 2026-02-22 23:09:10 [WARNING] ai_chat_plugin | AI_API_KEY 未配置，AI对话功能将禁用
+2026-02-22 23:09:10 [DEBUG] nonebot | 2026-02-22 23:09:10 [DEBUG] nonebot | QQ | QQ run in sandbox mode: False
+2026-02-22 23:09:10 [DEBUG] nonebot | 2026-02-22 23:09:10 [DEBUG] nonebot | QQ | QQ api base url: https://api.sgroup.qq.com/
+2026-02-22 23:09:10 [INFO] uvicorn | 2026-02-22 23:09:10 [INFO] uvicorn | Application startup complete.
+2026-02-22 23:09:10 [INFO] uvicorn | 2026-02-22 23:09:10 [INFO] uvicorn | Uvicorn running on http://127.0.0.1:8080 (Press CTRL+C to quit)
+2026-02-22 23:10:39 [SUCCESS] nonebot | 2026-02-22 23:10:39 [SUCCESS] nonebot | Console unmounted.
+2026-02-22 23:10:39 [WARNING] nonebot | 2026-02-22 23:10:39 [WARNING] nonebot | Press Ctrl-C for Application exit
+2026-02-22 23:10:42 [INFO] uvicorn | 2026-02-22 23:10:42 [INFO] uvicorn | Shutting down
+2026-02-22 23:10:42 [INFO] uvicorn | 2026-02-22 23:10:42 [INFO] uvicorn | Waiting for application shutdown.
+2026-02-22 23:10:42 [ERROR] uvicorn | 2026-02-22 23:10:42 [ERROR] uvicorn | Traceback (most recent call last):
+  File "F:\devbot\nonebot-plugin-mbtistats-devbot\.venv\Lib\site-packages\starlette\routing.py", line 694, in lifespan
+    async with self.lifespan_context(app) as maybe_state:
+               ~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\minec\AppData\Roaming\uv\python\cpython-3.13.11-windows-x86_64-none\Lib\contextlib.py", line 221, in __aexit__
+    await anext(self.gen)
+  File "F:\devbot\nonebot-plugin-mbtistats-devbot\.venv\Lib\site-packages\nonebot\drivers\fastapi.py", line 158, in _lifespan_manager
+    await self._lifespan.shutdown()
+  File "F:\devbot\nonebot-plugin-mbtistats-devbot\.venv\Lib\site-packages\nonebot\internal\driver\_lifespan.py", line 81, in shutdown
+    await self._run_lifespan_func(reversed(self._shutdown_funcs))
+  File "F:\devbot\nonebot-plugin-mbtistats-devbot\.venv\Lib\site-packages\nonebot\internal\driver\_lifespan.py", line 55, in _run_lifespan_func
+    await cast(ASYNC_LIFESPAN_FUNC, func)()
+  File "F:\devbot\nonebot-plugin-mbtistats-devbot\dev-plugins\mbtistats\src\nonebot_plugin_mbtistats\playwright_context.py", line 59, in close
+    await cls._browser.close()
+  File "F:\devbot\nonebot-plugin-mbtistats-devbot\.venv\Lib\site-packages\playwright\async_api\_generated.py", line 14264, in close
+    return mapping.from_maybe_impl(await self._impl_obj.close(reason=reason))
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "F:\devbot\nonebot-plugin-mbtistats-devbot\.venv\Lib\site-packages\playwright\_impl\_browser.py", line 241, in close
+    raise e
+  File "F:\devbot\nonebot-plugin-mbtistats-devbot\.venv\Lib\site-packages\playwright\_impl\_browser.py", line 238, in close
+    await self._channel.send("close", None, {"reason": reason})
+  File "F:\devbot\nonebot-plugin-mbtistats-devbot\.venv\Lib\site-packages\playwright\_impl\_connection.py", line 69, in send
+    return await self._connection.wrap_api_call(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "F:\devbot\nonebot-plugin-mbtistats-devbot\.venv\Lib\site-packages\playwright\_impl\_connection.py", line 559, in wrap_api_call
+    raise rewrite_error(error, f"{parsed_st['apiName']}: {error}") from None
+Exception: Browser.close: Connection closed while reading from the driver
+
+2026-02-22 23:10:42 [ERROR] uvicorn | 2026-02-22 23:10:42 [ERROR] uvicorn | Application shutdown failed. Exiting.
+2026-02-22 23:10:42 [INFO] uvicorn | 2026-02-22 23:10:42 [INFO] uvicorn | Finished server process [14096]

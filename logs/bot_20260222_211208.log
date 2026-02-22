@@ -1,0 +1,44 @@
+2026-02-22 21:12:08 [SUCCESS] nonebot | 2026-02-22 21:12:08 [SUCCESS] nonebot | NoneBot is initializing...
+2026-02-22 21:12:08 [INFO] nonebot | 2026-02-22 21:12:08 [INFO] nonebot | Current Env: onebotv11-wsRev
+2026-02-22 21:12:08 [DEBUG] nonebot | 2026-02-22 21:12:08 [DEBUG] nonebot | Loaded Config: {'driver': '~fastapi+~httpx+~websockets', 'host': IPv4Address('127.0.0.1'), 'port': 8080, 'log_level': 'INFO', 'api_timeout': 30.0, 'superusers': set(), 'nickname': set(), 'command_start': {'/'}, 'command_sep': {'.'}, 'session_expire_timeout': datetime.timedelta(seconds=120), 'environment': 'onebotv11-wsRev', 'localstore_use_cwd': True, 'onebot_ws_urls': ['ws://127.0.0.1:3001'], 'mbtistats_auto_stats_hour': 0, 'mbtistats_auto_stats_minute': 0, 'analysis_reanalysis_time': 0, 'analysis_display_image': True, 'analysis_enable_search': True, 'analysis_use_on_message': False, 'analysis_trust_env': False, 'ai_enabled': True, 'ai_api_key': 'sk-8d96bd3e257c292b3928a67b9544790eb8e3f0778721dc6380fa3db452fa00c7', 'ai_base_url': 'https://www.hubagi.cn/api/v1', 'ai_model': 'ZP-glm-4.5-flash', 'ai_max_history': 10}
+2026-02-22 21:12:09 [DEBUG] nonebot | 2026-02-22 21:12:09 [DEBUG] nonebot | Succeeded to load adapter "QQ"
+2026-02-22 21:12:09 [DEBUG] nonebot | 2026-02-22 21:12:09 [DEBUG] nonebot | Succeeded to load adapter "Console"
+2026-02-22 21:12:10 [SUCCESS] nonebot | 2026-02-22 21:12:10 [SUCCESS] nonebot | Succeeded to load plugin "nonebot_plugin_questionmark"
+2026-02-22 21:12:10 [SUCCESS] nonebot | 2026-02-22 21:12:10 [SUCCESS] nonebot | Succeeded to load plugin "nonebot_plugin_apscheduler"
+2026-02-22 21:12:10 [DEBUG] nonebot_plugin_mbtistats | 2026-02-22 21:12:10 [DEBUG] nonebot_plugin_mbtistats | [Config] Bot 根目录: F:\devbot\nonebot-plugin-mbtistats-devbot
+2026-02-22 21:12:10 [DEBUG] nonebot_plugin_mbtistats | 2026-02-22 21:12:10 [DEBUG] nonebot_plugin_mbtistats | [Config] 数据根目录: F:\devbot\nonebot-plugin-mbtistats-devbot\data\mbtistats
+2026-02-22 21:12:10 [INFO] nonebot_plugin_mbtistats | 2026-02-22 21:12:10 [INFO] nonebot_plugin_mbtistats | [AutoStats] 模块加载完成 - DEBUG_MODE=False, RUN_ON_STARTUP=False, SCHEDULE=00:00
+2026-02-22 21:12:10 [SUCCESS] nonebot | 2026-02-22 21:12:10 [SUCCESS] nonebot | Succeeded to load plugin "nonebot_plugin_mbtistats"
+2026-02-22 21:12:11 [SUCCESS] nonebot | 2026-02-22 21:12:11 [SUCCESS] nonebot | Succeeded to load plugin "nonebot_plugin_saa"
+2026-02-22 21:12:11 [SUCCESS] nonebot | 2026-02-22 21:12:11 [SUCCESS] nonebot | Succeeded to load plugin "nonebot_plugin_analysis_bilibili"
+2026-02-22 21:12:11 [SUCCESS] nonebot | 2026-02-22 21:12:11 [SUCCESS] nonebot | Succeeded to load plugin "single_session" from "nonebot.plugins.single_session"
+2026-02-22 21:12:11 [INFO] __main__ | 2026-02-22 21:12:11 [INFO] __main__ | Loading plugins from plugins directory...
+2026-02-22 21:12:11 [SUCCESS] nonebot | 2026-02-22 21:12:11 [SUCCESS] nonebot | Succeeded to load plugin "timer_plugin" from "plugins.timer_plugin"
+2026-02-22 21:12:11 [SUCCESS] nonebot | 2026-02-22 21:12:11 [SUCCESS] nonebot | Succeeded to load plugin "recall_plugin" from "plugins.recall_plugin"
+2026-02-22 21:12:11 [SUCCESS] nonebot | 2026-02-22 21:12:11 [SUCCESS] nonebot | Succeeded to load plugin "eval_plugin" from "plugins.eval_plugin"
+2026-02-22 21:12:12 [INFO] ai_chat_plugin | 2026-02-22 21:12:12 [INFO] ai_chat_plugin | 开始加载 AI 配置...
+2026-02-22 21:12:12 [INFO] ai_chat_plugin | 2026-02-22 21:12:12 [INFO] ai_chat_plugin | 读取到 API_KEY: sk-8d96bd3...
+2026-02-22 21:12:12 [INFO] ai_chat_plugin | 2026-02-22 21:12:12 [INFO] ai_chat_plugin | 读取到 BASE_URL: https://www.hubagi.cn/api/v1
+2026-02-22 21:12:12 [INFO] ai_chat_plugin | 2026-02-22 21:12:12 [INFO] ai_chat_plugin | AI对话功能已启用，模型: ZP-glm-4.5-flash, Base URL: https://www.hubagi.cn/api/v1
+2026-02-22 21:12:12 [SUCCESS] nonebot | 2026-02-22 21:12:12 [SUCCESS] nonebot | Succeeded to load plugin "ai_chat_plugin" from "plugins.ai_chat_plugin"
+2026-02-22 21:12:12 [INFO] __main__ | 2026-02-22 21:12:12 [INFO] __main__ | Plugins loaded!
+2026-02-22 21:12:12 [SUCCESS] nonebot | 2026-02-22 21:12:12 [SUCCESS] nonebot | Running NoneBot...
+2026-02-22 21:12:12 [SUCCESS] nonebot | 2026-02-22 21:12:12 [SUCCESS] nonebot | Loaded adapters: QQ, Console
+2026-02-22 21:12:12 [INFO] uvicorn | 2026-02-22 21:12:12 [INFO] uvicorn | Started server process [35452]
+2026-02-22 21:12:12 [INFO] uvicorn | 2026-02-22 21:12:12 [INFO] uvicorn | Waiting for application startup.
+2026-02-22 21:12:12 [INFO] nonebot_plugin_apscheduler | 2026-02-22 21:12:12 [INFO] nonebot_plugin_apscheduler | Scheduler Started
+2026-02-22 21:12:12 [INFO] nonebot_plugin_mbtistats | 2026-02-22 21:12:12 [INFO] nonebot_plugin_mbtistats | 正在启动 Playwright 浏览器内核...
+2026-02-22 21:12:12 [SUCCESS] nonebot | 2026-02-22 21:12:12 [SUCCESS] nonebot | Console mounted.
+2026-02-22 21:12:13 [DEBUG] nonebot_plugin_mbtistats | 2026-02-22 21:12:13 [DEBUG] nonebot_plugin_mbtistats | [AutoStats] 启动时执行已禁用（设置 auto_stats_run_on_startup=true 启用）
+2026-02-22 21:12:14 [INFO] nonebot_plugin_mbtistats | 2026-02-22 21:12:14 [INFO] nonebot_plugin_mbtistats | Playwright 浏览器内核及上下文启动成功
+2026-02-22 21:12:14 [INFO] ai_chat_plugin | 2026-02-22 21:12:14 [INFO] ai_chat_plugin | AI 插件启动完成
+2026-02-22 21:12:14 [DEBUG] nonebot | 2026-02-22 21:12:14 [DEBUG] nonebot | QQ | QQ run in sandbox mode: False
+2026-02-22 21:12:14 [DEBUG] nonebot | 2026-02-22 21:12:14 [DEBUG] nonebot | QQ | QQ api base url: https://api.sgroup.qq.com/
+2026-02-22 21:12:14 [INFO] uvicorn | 2026-02-22 21:12:14 [INFO] uvicorn | Application startup complete.
+2026-02-22 21:12:14 [ERROR] uvicorn | 2026-02-22 21:12:14 [ERROR] uvicorn | [Errno 10048] error while attempting to bind on address ('127.0.0.1', 8080): [winerror 10048] 通常每个套接字地址(协议/网络地址/端口)只允许使用一次。
+2026-02-22 21:12:14 [INFO] uvicorn | 2026-02-22 21:12:14 [INFO] uvicorn | Waiting for application shutdown.
+2026-02-22 21:12:14 [INFO] nonebot_plugin_mbtistats | 2026-02-22 21:12:14 [INFO] nonebot_plugin_mbtistats | Playwright 资源已释放
+2026-02-22 21:12:14 [INFO] nonebot_plugin_apscheduler | 2026-02-22 21:12:14 [INFO] nonebot_plugin_apscheduler | Scheduler Shutdown
+2026-02-22 21:12:14 [SUCCESS] nonebot | 2026-02-22 21:12:14 [SUCCESS] nonebot | Console unmounted.
+2026-02-22 21:12:14 [WARNING] nonebot | 2026-02-22 21:12:14 [WARNING] nonebot | Press Ctrl-C for Application exit
+2026-02-22 21:12:14 [INFO] uvicorn | 2026-02-22 21:12:14 [INFO] uvicorn | Application shutdown complete.

@@ -8,6 +8,7 @@ from nonebot.adapters.onebot.v11 import (
     PrivateMessageEvent,
     Bot,
     MessageSegment as OneBotMessageSegment,
+    Message as OneBotMessage,
 )
 from nonebot.adapters.console import MessageEvent as ConsoleMessageEvent
 from typing import List
@@ -23,7 +24,7 @@ __plugin_meta__ = PluginMetadata(
 recall_cmd = on_command("recall", priority=1, block=True)
 
 
-async def get_bot_messages(bot: Bot, event: GroupMessageEvent, count: int) -> List[int]:
+async def get_bot_messages(bot: Bot, event: GroupMessageEvent, count: int, time_to: int) -> List[int]:
     """获取机器人最近发送的消息ID列表"""
     messages = []
     try:
@@ -34,9 +35,11 @@ async def get_bot_messages(bot: Bot, event: GroupMessageEvent, count: int) -> Li
         )
         
         # 筛选出机器人发送的消息
-        for msg in history:
-            if msg["user_id"] == bot.self_id:
-                messages.append(msg["message_id"])
+        for msg in reversed(history['messages']):
+            if int(msg.get("user_id")) == int(bot.self_id) and msg["time"] <= time_to:
+                msg_id = msg.get("message_id")
+                if msg_id is not None:
+                    messages.append(int(msg_id))
                 if len(messages) >= count:
                     break
     except Exception as e:
@@ -90,18 +93,30 @@ async def handle_recall(bot: Bot, event: MessageEvent, message: Message = Comman
     user_id = event.get_user_id()
     user_mention = OneBotMessageSegment.at(user_id)
     
-    await recall_cmd.send(f"{user_mention} 正在撤回最近 {count} 条机器人消息...")
+    await recall_cmd.send(OneBotMessage([
+            user_mention, 
+            OneBotMessageSegment.text(f" 正在撤回最近 {count} 条机器人消息...")
+        ]))
     
-    bot_messages = await get_bot_messages(bot, event, count)
+    bot_messages = await get_bot_messages(bot, event, count, event.time - 1)  # 防止刚才发送的提示消息被撤回
     
     if not bot_messages:
-        await recall_cmd.finish(f"{user_mention} 未找到可撤回的机器人消息")
+        await recall_cmd.finish(OneBotMessage([
+                user_mention, 
+                OneBotMessageSegment.text(" 未找到可撤回的机器人消息")
+            ]))
     
     # 撤回消息
     success_count = await recall_messages(bot, bot_messages)
     
     # 发送结果
     if success_count == count:
-        await recall_cmd.send(f"{user_mention} ✅ 成功撤回 {success_count} 条消息")
+        await recall_cmd.send(OneBotMessage([
+                user_mention, 
+                OneBotMessageSegment.text(f" ✅ 成功撤回 {success_count} 条消息")
+            ]))
     else:
-        await recall_cmd.send(f"{user_mention} ⚠️ 成功撤回 {success_count}/{len(bot_messages)} 条消息")
+        await recall_cmd.send(OneBotMessage([
+                user_mention, 
+                OneBotMessageSegment.text(f" ⚠️ 成功撤回 {success_count}/{len(bot_messages)} 条消息")
+            ]))

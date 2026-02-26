@@ -42,35 +42,25 @@ HOME_HELP = """
 你好呀，我是 MBTI 计数菌～
 我是一位专注于 MBTI 人格类型统计的机器人，可以自动识别群名片/昵称中的 MBTI 类型，生成统计图表。
 
-
 📊 核心功能
-
-/mbti
-  统计当前群的 MBTI 类型分布和特质维度分布，生成统计图
-  
-支持的类型格式：
-  • 标准型：INTP、enfp（全大写/全小写）
-  • 模糊型：INXP、exxp（用 X/x 代替不确定字母）
-  • 扩展型：INTP-T、INTP(5w4)（识别其中的 MBTI 代码）
-  • OPS 型：Te/Se、Ni/Fe（识别优势功能代码）
-
-需要群友在群名片或 QQ 昵称中主动标注自己的 MBTI 类型才能被统计到哦～
-
+• /mbti
+    统计当前群的 MBTI 类型分布和特质维度分布，生成统计图
+• 支持的类型格式：
+    • 标准型：INTP、enfp（全大写/全小写）
+    • 模糊型：INXP、exxp（用 X/x 代替不确定字母）
+    • 扩展型：INTP-T、INTP(5w4)（识别其中的 MBTI 代码）
+    • OPS 型：Te/Se、Ni/Fe（识别优势功能代码）
+• 需要群友在群名片或 QQ 昵称中主动标注自己的 MBTI 类型才能被统计到哦～
 
 🔧 其他功能
-
-/help (或 /帮助)
-  显示此帮助信息，需要 @bot。
-
-/help plugins
-  查看所有可用插件列表
-
-/help <插件名>
-  查看指定插件的详细帮助
-
+• /help (或 /帮助)
+    显示此帮助信息，需要 @我。
+• /help plugins (或 /help 列表)
+    查看所有可用插件列表
+• /help <插件名>
+    查看指定插件的详细帮助
 
 💡 提示
-
 • 所有指令均可使用 "/" 作为前缀
 • 使用 "/help plugins" 探索更多功能
 """.strip()
@@ -80,14 +70,21 @@ def get_visible_plugins():
     """获取可见的插件列表（白名单机制）"""
     whitelist = help_config.help_visible_plugins if help_config else set()
     
-    visible = []
-    for plugin in get_loaded_plugins():
-        # 白名单为空时显示所有插件（基础设施需要自己配置隐藏）
-        # 白名单不为空时，只显示白名单内的插件
-        if whitelist and plugin.name not in whitelist:
-            continue
+    loaded = get_loaded_plugins()
+    visible = list(loaded)
+    visible.clear()  # 先转换后清空，em，只是为了让它有完整的类型提示（）
+
+    # 白名单为空时显示所有插件（基础设施需要自己配置隐藏）
+    if not whitelist:
+        return loaded
+
+    # 白名单不为空时，只显示白名单内的插件
+    for plugin in loaded:
         # 跳过没有 metadata 的插件
         if not plugin.metadata:
+            continue
+        # 插件包名和 metadata.name 都可以作为匹配项
+        if plugin.name not in whitelist and (plugin.metadata.name not in whitelist):
             continue
         visible.append(plugin)
     
@@ -141,7 +138,7 @@ async def handle_help(bot: Bot, event: Event, matcher: Matcher):
         return
     
     # 参数为 plugins/all/列表 -> 显示过滤后的插件列表
-    if text in ["plugins", "all", "列表", "plugin", "list"]:
+    if text in ["plugins", "列表"]:
         plugin_list = format_plugin_list()
         await matcher.send(plugin_list)
         return
@@ -160,7 +157,7 @@ async def handle_help(bot: Bot, event: Event, matcher: Matcher):
             found = plugin
             break
     
-    if found and found.metadata and found.name in get_visible_plugins():
+    if found and found.metadata and found in get_visible_plugins():
         meta = found.metadata
         name = meta.name or found.name
         desc = meta.description or "暂无描述"

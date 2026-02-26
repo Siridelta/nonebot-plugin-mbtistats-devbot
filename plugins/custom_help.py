@@ -104,7 +104,7 @@ def format_plugin_list() -> str:
         name = meta.name or plugin.name
         desc = meta.description or "暂无描述"
         # 截断过长的描述
-        if len(desc) > 30:
+        if len(desc) > 50:
             desc = desc[:27] + "..."
         lines.append(f"  • {name} - {desc}")
     

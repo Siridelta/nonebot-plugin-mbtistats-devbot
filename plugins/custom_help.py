@@ -60,21 +60,33 @@ HOME_HELP = """
 • /help <插件名>
     查看指定插件的详细帮助
 
+🔗 开发 & 部署
+• 使用 "/help dev" 查看相关信息
+
 💡 提示
 • 所有指令均可使用 "/" 作为前缀
 • 使用 "/help plugins" 探索更多功能
 
-🔗 开发 & 部署
-• 这是一个开源项目，欢迎访问 GitHub 仓库：
-  • mbti统计插件 (nonebot2 插件): https://github.com/Siridelta/nonebot-plugin-mbtistats 
-    • mbti统计功能为 nonebot2 插件的形式，可以加载到任何 NoneBot 2 机器人上使用哦~
-  • 机器人整体开发 & 部署仓库: https://github.com/Siridelta/nonebot-plugin-mbtistats-devbot
-    • 这是我们开发、调试 mbti 统计插件，以及部署本计数菌的仓库，包含了其他小工具和插件，可以直接 clone 和部署（如果想部署一个跟我一模一样的计数菌 bot 的话）
-  • 这两个仓库目前还在早期开发阶段，换句话说还没准备好正式开源发布x 但是如果你对这个项目感兴趣，欢迎提前关注和 star 哦～
-
 🙏 致谢
 • 开发者: Sirilit(识启), AllayFocalors(玛画疼)
 • QQ 群: "MBTI 一同启程"——的群友们对 bot 早期开发的支持和反馈~
+""".strip()
+
+# 开发 & 部署信息（从主页分离）
+DEV_HELP = """
+🔗 开发 & 部署
+
+这是一个开源项目，欢迎访问 GitHub 仓库：
+
+• mbti统计插件 (nonebot2 插件)
+  https://github.com/Siridelta/nonebot-plugin-mbtistats
+  mbti统计功能为 nonebot2 插件的形式，可以加载到任何 NoneBot 2 机器人上使用哦~
+
+• 机器人整体开发 & 部署仓库
+  https://github.com/Siridelta/nonebot-plugin-mbtistats-devbot
+  这是我们开发、调试 mbti 统计插件，以及部署本计数菌的仓库，包含了其他小工具和插件，可以直接 clone 和部署（如果想部署一个跟我一模一样的计数菌 bot 的话）
+
+• 这两个仓库目前还在早期开发阶段，换句话说还没准备好正式开源发布x 但是如果你对这个项目感兴趣，欢迎提前关注和 star 哦～
 """.strip()
 
 
@@ -149,10 +161,15 @@ async def handle_help(bot: Bot, event: Event, matcher: Matcher):
         await matcher.send(HOME_HELP)
         return
     
-    # 参数为 plugins/all/列表 -> 显示过滤后的插件列表
+    # 参数为 plugins/列表 -> 显示过滤后的插件列表
     if text in ["plugins", "列表"]:
         plugin_list = format_plugin_list()
         await matcher.send(plugin_list)
+        return
+    
+    # 参数为 dev -> 显示开发 & 部署信息
+    if text in ["dev"]:
+        await matcher.send(DEV_HELP)
         return
     
     # 其他参数（可能是插件名）-> 查询具体插件

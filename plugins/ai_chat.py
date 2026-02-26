@@ -46,8 +46,23 @@ plugin_config = get_plugin_config(AIChatConfig)
 
 __plugin_meta__ = PluginMetadata(
     name="ai_chat",
-    description="AI对话插件 - @机器人进行智能对话",
-    usage="@机器人 + 中文消息即可触发AI对话",
+    description="AI对话插件 - 基于大语言模型的智能对话",
+    usage="""触发方式：
+  @机器人 + 中文消息（消息中需包含中文字符）
+
+可用指令：
+  清除记忆 / 清空记忆 / 重置对话 / 清除对话 / 清空对话
+    清空当前会话的对话历史
+
+示例：
+  @机器人 你好呀
+  @机器人 请用INTJ的方式分析这个问题
+  @机器人 清除记忆
+
+注意：
+  • 仅响应中文消息（避免误触发）
+  • 不以 "/" 开头的消息才会触发AI对话
+  • 对话历史按会话（群聊/私聊）隔离保存""",
     type="application",
 )
 

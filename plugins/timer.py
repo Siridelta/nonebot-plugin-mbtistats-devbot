@@ -6,8 +6,24 @@ import asyncio
 
 __plugin_meta__ = PluginMetadata(
     name="timer",
-    description="倒计时提醒插件",
-    usage="/timer [时长] [提醒内容]",
+    description="设置倒计时提醒",
+    usage="""用法：
+  /timer <时长> [提醒内容]
+
+时间格式：
+  • <数字>s - 秒，如：30s
+  • <数字>m - 分钟，如：5m
+  • <数字>h - 小时，如：1h
+
+示例：
+  /timer 30s           # 30秒后提醒"时间到！"
+  /timer 5m 喝水       # 5分钟后提醒"喝水"
+  /timer 1h 开会       # 1小时后提醒"开会"
+
+限制：
+  • 最大支持 24 小时（86400秒）
+  • 重启 Bot 后未完成的定时器会丢失""",
+    type="application",
 )
 
 timer_cmd = on_command("timer", priority=1, block=True)

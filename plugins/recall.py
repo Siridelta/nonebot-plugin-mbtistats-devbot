@@ -16,8 +16,19 @@ import asyncio
 
 __plugin_meta__ = PluginMetadata(
     name="recall",
-    description="撤回消息插件",
-    usage="/recall [数量]\n示例: /recall 5\n注意: 只能撤回机器人自己发送的消息",
+    description="撤回机器人自己发送的消息",
+    usage="""用法：
+  /recall [数量]
+
+示例：
+  /recall     # 撤回最近 5 条（默认）
+  /recall 10  # 撤回最近 10 条
+
+限制：
+  • 只能撤回机器人自己发送的消息
+  • 受限于消息记录缓存，太久远的消息可能无法撤回
+  • 仅支持 OneBot V11 协议（QQ 群聊）
+  • 频繁撤回可能触发平台频率限制""",
     type="application",
 )
 

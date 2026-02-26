@@ -6,8 +6,20 @@ from nonebot.exception import FinishedException
 
 __plugin_meta__ = PluginMetadata(
     name="eval",
-    description="执行 Python 表达式（仅限开发环境）",
-    usage="/eval [expression]",
+    description="执行 Python 表达式（仅限开发环境使用）",
+    usage="""⚠️ 警告：此命令执行任意 Python 代码，仅限开发调试使用，生产环境请禁用！
+
+用法：
+  /eval <Python表达式>
+
+示例：
+  /eval 1+1
+  /eval len([1,2,3])
+  /eval str(123)
+
+安全限制：
+  • 无法访问内置函数（__builtins__ 已禁用）
+  • 仅支持纯表达式计算""",
     type="application",
 )
 

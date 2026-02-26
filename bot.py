@@ -39,11 +39,11 @@ nonebot.init()
 driver = nonebot.get_driver()
 driver.register_adapter(QQAdapter)
 driver.register_adapter(ConsoleAdapter)
-# driver.register_adapter(OneBotV11Adapter)  # 暂时禁用 OneBot v11
+driver.register_adapter(OneBotV11Adapter)
 
 # 加载插件
 nonebot.load_from_toml("pyproject.toml")
-nonebot.load_builtin_plugins("single_session")
+nonebot.load_builtin_plugins("single_session", "echo")
 logger.info("Loading plugins from plugins directory...")
 nonebot.load_plugins("plugins")
 logger.info("Plugins loaded!")

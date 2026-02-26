@@ -2,6 +2,7 @@ from nonebot import on_command
 from nonebot.adapters import Message
 from nonebot.params import CommandArg
 from nonebot.plugin import PluginMetadata
+from nonebot.exception import FinishedException
 
 __plugin_meta__ = PluginMetadata(
     name="eval",
@@ -22,6 +23,8 @@ async def handle_eval(message: Message = CommandArg()):
     
     try:
         result = eval(text, {"__builtins__": {}}, {})
-        await eval_cmd.finish(f"结果: {result}")
+        await eval_cmd.finish(f"{result}")
+    except FinishedException:
+        pass
     except Exception as e:
         await eval_cmd.finish(f"执行错误: {e}")

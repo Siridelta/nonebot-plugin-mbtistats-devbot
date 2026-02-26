@@ -18,7 +18,10 @@ wheels/
 !.env.onebotv11-wsRev.example
 
 # Bot Data Cache
-data/
+/data/
+
+# Bot logs
+/logs/
 
 # Preview HTML files
 **/preview.html

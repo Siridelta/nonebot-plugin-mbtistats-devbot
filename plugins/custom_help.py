@@ -1,8 +1,31 @@
-from nonebot import on_command
-from nonebot.plugin import PluginMetadata
+from typing import Set
+
+from nonebot import on_command, get_driver
+from nonebot.plugin import PluginMetadata, get_loaded_plugins
 from nonebot.adapters import Bot, Event
 from nonebot.internal.matcher import Matcher
 from nonebot.rule import to_me
+from pydantic import BaseModel, Field
+
+
+class HelpConfig(BaseModel):
+    """帮助插件配置 - 白名单机制"""
+    help_visible_plugins: Set[str] = Field(
+        default_factory=set,
+        description="在插件列表中显示的插件包名（白名单），为空则显示所有插件"
+    )
+
+
+# 获取配置
+help_config = None
+try:
+    driver = get_driver()
+    from nonebot.plugin import get_plugin_config
+    help_config = get_plugin_config(HelpConfig)
+except Exception:
+    # 配置加载失败时使用默认
+    help_config = HelpConfig()
+
 
 __plugin_meta__ = PluginMetadata(
     name="custom_help",
@@ -53,13 +76,54 @@ HOME_HELP = """
 """.strip()
 
 
+def get_visible_plugins():
+    """获取可见的插件列表（白名单机制）"""
+    whitelist = help_config.help_visible_plugins if help_config else set()
+    
+    visible = []
+    for plugin in get_loaded_plugins():
+        # 白名单为空时显示所有插件（基础设施需要自己配置隐藏）
+        # 白名单不为空时，只显示白名单内的插件
+        if whitelist and plugin.name not in whitelist:
+            continue
+        # 跳过没有 metadata 的插件
+        if not plugin.metadata:
+            continue
+        visible.append(plugin)
+    
+    return visible
+
+
+def format_plugin_list() -> str:
+    """格式化插件列表为文本"""
+    plugins = get_visible_plugins()
+    
+    if not plugins:
+        return "暂无其他插件"
+    
+    lines = ["📦 已加载插件："]
+    for plugin in plugins:
+        meta = plugin.metadata
+        name = meta.name or plugin.name
+        desc = meta.description or "暂无描述"
+        # 截断过长的描述
+        if len(desc) > 30:
+            desc = desc[:27] + "..."
+        lines.append(f"  • {name} - {desc}")
+    
+    lines.append("")
+    lines.append("使用 /help <插件名> 查看详细帮助")
+    
+    return "\n".join(lines)
+
+
 @help_cmd.handle()
 async def handle_help(bot: Bot, event: Event, matcher: Matcher):
     """
     处理 /help 命令
     无参数或参数为空时显示主页帮助
-    参数为 plugins 时透传给 help 插件
-    参数为其他时透传给 help 插件查询具体插件
+    参数为 plugins 时显示过滤后的插件列表
+    参数为其他时查询具体插件帮助
     """
     # 获取命令参数
     text = event.get_message().extract_plain_text().strip()
@@ -76,19 +140,33 @@ async def handle_help(bot: Bot, event: Event, matcher: Matcher):
         await matcher.send(HOME_HELP)
         return
     
-    # 参数为 plugins/all/列表 -> 透传给 help 插件（如果安装了的话）
-    if text in ["plugins", "all", "列表", "plugin"]:
-        # 尝试调用 help 插件的功能
-        try:
-            from nonebot import require
-            help_plugin = require("nonebot_plugin_help")
-            # 如果 help 插件有获取插件列表的功能，调用它
-            # 这里简单处理，直接提示用户
-            await matcher.send("📦 插件列表功能需要安装 nonebot-plugin-help\n\n可用命令：\n/mbti - MBTI 统计\n/help - 显示此帮助")
-        except Exception:
-            await matcher.send("📦 暂无其他插件\n\n可用命令：\n/mbti - MBTI 统计\n/help - 显示此帮助")
+    # 参数为 plugins/all/列表 -> 显示过滤后的插件列表
+    if text in ["plugins", "all", "列表", "plugin", "list"]:
+        plugin_list = format_plugin_list()
+        await matcher.send(plugin_list)
         return
     
-    # 其他参数（可能是插件名）-> 透传或提示
+    # 其他参数（可能是插件名）-> 查询具体插件
     plugin_name = text
-    await matcher.send(f"📦 插件「{plugin_name}」的帮助功能需要安装 nonebot-plugin-help\n\n使用 /help 查看主页帮助")
+    
+    # 查找插件
+    found = None
+    for plugin in get_loaded_plugins():
+        # 匹配插件包名或 metadata.name
+        if plugin.name == plugin_name:
+            found = plugin
+            break
+        if plugin.metadata and plugin.metadata.name == plugin_name:
+            found = plugin
+            break
+    
+    if found and found.metadata:
+        meta = found.metadata
+        name = meta.name or found.name
+        desc = meta.description or "暂无描述"
+        usage = meta.usage or "暂无使用说明"
+        
+        help_text = f"「{name}」\n{desc}\n\n使用方法：\n{usage}"
+        await matcher.send(help_text)
+    else:
+        await matcher.send(f"❓ 未找到插件「{plugin_name}」\n\n使用 /help plugins 查看可用插件列表")

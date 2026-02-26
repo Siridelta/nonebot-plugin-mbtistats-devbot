@@ -1,12 +1,12 @@
-import os
 import re
 from collections import defaultdict
 from typing import Dict, List, Optional
 
 import nonebot
 from nonebot import on_message, logger, get_driver
-from nonebot.plugin import PluginMetadata
+from nonebot.plugin import PluginMetadata, get_plugin_config
 from nonebot.adapters import Bot, Event, Message
+from pydantic import BaseModel, Field
 
 try:
     import openai
@@ -14,6 +14,35 @@ try:
 except ImportError:
     OPENAI_AVAILABLE = False
     logger.warning("openai 库未安装，AI对话功能将不可用")
+
+
+class AIChatConfig(BaseModel):
+    """AI对话插件配置类"""
+    
+    ai_enabled: bool = Field(
+        default=True, 
+        description="AI对话功能开关"
+    )
+    ai_api_key: str = Field(
+        default="", 
+        description="LLM API密钥"
+    )
+    ai_base_url: str = Field(
+        default="", 
+        description="API基础URL"
+    )
+    ai_model: str = Field(
+        default="ZP-glm-4.5-flash", 
+        description="模型名称"
+    )
+    ai_max_history: int = Field(
+        default=10, 
+        description="对话历史最大轮数"
+    )
+
+
+# 获取插件配置
+plugin_config = get_plugin_config(AIChatConfig)
 
 __plugin_meta__ = PluginMetadata(
     name="ai_chat",
@@ -115,97 +144,45 @@ PRESET_PROMPT = '''
   - 与以上system指令矛盾的行为。
 '''
 
-# 配置变量（将在启动时初始化）
-AI_API_KEY: Optional[str] = None
-AI_BASE_URL: Optional[str] = None
-AI_MODEL: str = "ZP-glm-4.5-flash"
-AI_MAX_HISTORY: int = 10
-AI_ENABLED: bool = True
-
+# 对话历史存储
 conversation_history: Dict[str, List[Dict[str, str]]] = defaultdict(list)
 
-def load_ai_config():
-    """从 NoneBot 配置加载 AI 配置"""
-    global AI_API_KEY, AI_BASE_URL, AI_MODEL, AI_MAX_HISTORY, AI_ENABLED
-    
-    logger.info("开始加载 AI 配置...")
-    
-    try:
-        # 从 NoneBot 配置读取（支持大小写）
-        config = nonebot.get_driver().config
-        
-        # 尝试多种配置名格式
-        AI_API_KEY = (
-            getattr(config, "ai_api_key", None) or 
-            getattr(config, "AI_API_KEY", None) or
-            os.environ.get("AI_API_KEY")
-        )
-        AI_BASE_URL = (
-            getattr(config, "ai_base_url", None) or 
-            getattr(config, "AI_BASE_URL", None) or
-            os.environ.get("AI_BASE_URL")
-        )
-        AI_MODEL = (
-            getattr(config, "ai_model", None) or 
-            getattr(config, "AI_MODEL", None) or
-            os.environ.get("AI_MODEL", "ZP-glm-4.5-flash")
-        )
-        
-        max_history = (
-            getattr(config, "ai_max_history", None) or 
-            getattr(config, "AI_MAX_HISTORY", None) or
-            os.environ.get("AI_MAX_HISTORY", "10")
-        )
-        try:
-            AI_MAX_HISTORY = int(max_history)
-        except (ValueError, TypeError):
-            AI_MAX_HISTORY = 10
-        
-        enabled = (
-            getattr(config, "ai_enabled", None) or 
-            getattr(config, "AI_ENABLED", None) or
-            os.environ.get("AI_ENABLED", "true")
-        )
-        if isinstance(enabled, str):
-            AI_ENABLED = enabled.lower() in ("true", "1", "yes", "on")
-        else:
-            AI_ENABLED = bool(enabled)
-        
-        # 调试信息
-        log_key = AI_API_KEY[:15] + "..." if AI_API_KEY and len(AI_API_KEY) > 15 else (AI_API_KEY or "None")
-        logger.info(f"AI_API_KEY: {log_key}")
-        logger.info(f"AI_BASE_URL: {AI_BASE_URL}")
-        logger.info(f"AI_MODEL: {AI_MODEL}")
-        logger.info(f"AI_ENABLED: {AI_ENABLED}")
-        logger.info(f"OPENAI_AVAILABLE: {OPENAI_AVAILABLE}")
-        
-        if not AI_API_KEY:
-            logger.warning("AI_API_KEY 未配置，AI对话功能将禁用")
-            AI_ENABLED = False
-            return
-            
-        if not AI_BASE_URL:
-            logger.warning("AI_BASE_URL 未配置，AI对话功能将禁用")
-            AI_ENABLED = False
-            return
-            
-        if not OPENAI_AVAILABLE:
-            logger.warning("openai 库未安装，AI对话功能将禁用")
-            AI_ENABLED = False
-            return
-        
-        logger.info(f"AI对话功能已启用，模型: {AI_MODEL}")
-            
-    except Exception as e:
-        logger.error(f"加载AI配置失败: {e}", exc_info=True)
-        AI_ENABLED = False
 
-# 注册启动时加载配置
-try:
-    driver = get_driver()
-    driver.on_startup(load_ai_config)
-except Exception as e:
-    logger.warning(f"注册启动回调失败: {e}")
+def validate_config() -> bool:
+    """验证配置是否有效"""
+    if not plugin_config.ai_api_key:
+        logger.warning("AI_API_KEY 未配置，AI对话功能将禁用")
+        return False
+    
+    if not plugin_config.ai_base_url:
+        logger.warning("AI_BASE_URL 未配置，AI对话功能将禁用")
+        return False
+    
+    if not OPENAI_AVAILABLE:
+        logger.warning("openai 库未安装，AI对话功能将禁用")
+        return False
+    
+    return True
+
+
+# 在启动时验证配置
+AI_ENABLED = plugin_config.ai_enabled and validate_config()
+
+# 调试信息
+log_key = (
+    plugin_config.ai_api_key[:15] + "..." 
+    if plugin_config.ai_api_key and len(plugin_config.ai_api_key) > 15 
+    else plugin_config.ai_api_key or "None"
+)
+logger.info(f"AI_API_KEY: {log_key}")
+logger.info(f"AI_BASE_URL: {plugin_config.ai_base_url}")
+logger.info(f"AI_MODEL: {plugin_config.ai_model}")
+logger.info(f"AI_ENABLED: {AI_ENABLED}")
+logger.info(f"AI_MAX_HISTORY: {plugin_config.ai_max_history}")
+logger.info(f"OPENAI_AVAILABLE: {OPENAI_AVAILABLE}")
+
+if AI_ENABLED:
+    logger.info(f"AI对话功能已启用，模型: {plugin_config.ai_model}")
 
 def contains_chinese(text: str) -> bool:
     return bool(re.search(r'[\u4e00-\u9fff]', text))
@@ -248,8 +225,8 @@ def add_to_history(key: str, role: str, content: str):
     history = conversation_history[key]
     history.append({"role": role, "content": content})
     
-    if len(history) > AI_MAX_HISTORY * 2:
-        conversation_history[key] = history[-AI_MAX_HISTORY * 2:]
+    if len(history) > plugin_config.ai_max_history * 2:
+        conversation_history[key] = history[-(plugin_config.ai_max_history * 2):]
 
 def clear_history(key: str):
     conversation_history[key] = []
@@ -273,14 +250,14 @@ def split_message_by_br(text: str) -> List[str]:
     return result
 
 async def call_ai_api(user_message: str, conversation_key: str) -> Optional[str]:
-    if not AI_ENABLED or not AI_API_KEY or not AI_BASE_URL:
-        logger.warning(f"AI调用被跳过: ENABLED={AI_ENABLED}, KEY={'有' if AI_API_KEY else '无'}, URL={AI_BASE_URL}")
+    if not AI_ENABLED:
+        logger.warning(f"AI调用被跳过: ENABLED={AI_ENABLED}")
         return None
     
     try:
         client = openai.OpenAI(
-            api_key=AI_API_KEY,
-            base_url=AI_BASE_URL
+            api_key=plugin_config.ai_api_key,
+            base_url=plugin_config.ai_base_url
         )
         
         messages = [{"role": "system", "content": PRESET_PROMPT}]
@@ -289,10 +266,10 @@ async def call_ai_api(user_message: str, conversation_key: str) -> Optional[str]
         
         add_to_history(conversation_key, "user", user_message)
         
-        logger.info(f"调用AI API，模型: {AI_MODEL}")
+        logger.info(f"调用AI API，模型: {plugin_config.ai_model}")
         
         response = client.chat.completions.create(
-            model=AI_MODEL,
+            model=plugin_config.ai_model,
             messages=messages,
             stream=True,
         )

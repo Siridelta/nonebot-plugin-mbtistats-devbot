@@ -35,10 +35,13 @@ __plugin_meta__ = PluginMetadata(
 )
 
 # 高优先级，拦截 /help 命令
-help_cmd = on_command("help", aliases={"帮助"}, rule=to_me(), priority=1, block=True)
-
-# 主页帮助文本（突出 MBTI 统计 - 机器人核心身份）
-HOME_HELP = """
+help_cmd = on_command("help", aliases={"帮助"}, priority=1, block=True)
+''''''
+def get_home_help() -> str:
+    """动态生成主页帮助文本，包含所有插件命令"""
+    
+    # 基础介绍
+    help_text = """
 你好呀，我是 MBTI 计数菌～
 我是一位专注于 MBTI 人格类型统计的机器人，可以自动识别群名片/昵称中的 MBTI 类型，生成统计图表。
 
@@ -51,10 +54,34 @@ HOME_HELP = """
     • 扩展型：INTP-T、INTP(5w4)（识别其中的 MBTI 代码）
     • OPS 型：Te/Se、Ni/Fe（识别优势功能代码）
 • 需要群友在群名片或 QQ 昵称中主动标注自己的 MBTI 类型才能被统计到哦～
+""".strip()
+    
+    # 动态获取所有插件的命令
+    plugin_commands = []
+    
+    # 手动添加已知的核心命令（确保顺序和描述准确）
+    core_commands = [
+        ("/运势", "测运势", "查看今日MBTI运势（可带生日获得更个性化结果）"),
+        ("/timer", "timer", "设置倒计时提醒，如：/timer 5m 喝水"),
+        ("/eval", 'eval', '执行Python语法计算，包括但不限于普通运算和简易数据操作'),
+        ("/recall", "recall", "撤回机器人最近发送的消息"),
+    ]
+    
+    for cmd, name, desc in core_commands:
+        plugin_commands.append(f"• {cmd}\n    {desc}")
+    
+    # 添加AI对话说明
+    plugin_commands.append("• @机器人 + 中文消息\n    与AI进行MBTI主题对话（16型人格角色扮演）")
+    
+    if plugin_commands:
+        help_text += "\n\n🎮 趣味功能\n" + "\n".join(plugin_commands)
+    
+    # 帮助系统说明
+    help_text += """
 
-🔧 其他功能
+🔧 帮助系统
 • /help (或 /帮助)
-    显示此帮助信息，需要 @我。
+    显示此帮助信息
 • /help plugins (或 /help 列表)
     查看所有可用插件列表
 • /help <插件名>
@@ -70,7 +97,9 @@ HOME_HELP = """
 🙏 致谢
 • 开发者: Sirilit(识启), AllayFocalors(玛画疼)
 • QQ 群: "MBTI 一同启程"——的群友们对 bot 早期开发的支持和反馈~
-""".strip()
+"""
+    
+    return help_text
 
 # 开发 & 部署信息（从主页分离）
 DEV_HELP = """
@@ -158,7 +187,7 @@ async def handle_help(bot: Bot, event: Event, matcher: Matcher):
     
     # 无参数或参数为空 -> 显示主页帮助
     if not text:
-        await matcher.send(HOME_HELP)
+        await matcher.send(get_home_help())
         return
     
     # 参数为 plugins/列表 -> 显示过滤后的插件列表

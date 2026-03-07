@@ -9,6 +9,7 @@ import nonebot
 from nonebot.adapters.console import Adapter as ConsoleAdapter
 from nonebot.log import logger, default_filter, default_format
 
+
 # 创建日志目录
 log_dir = Path("logs")
 log_dir.mkdir(exist_ok=True)

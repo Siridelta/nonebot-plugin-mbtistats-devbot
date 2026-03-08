@@ -21,6 +21,27 @@ require("nonebot_plugin_mbtistats")
 from nonebot_plugin_mbtistats.analyze import parse_mbti_from_text
 
 
+__plugin_meta__ = PluginMetadata(
+    name="fortune",
+    description="MBTI运势测试插件 - 基于算法生成积极向上的运势",
+    usage="""用法：
+  /运势 [MBTI类型] [出生日期(可选)]
+  /今日运势 [MBTI类型]
+
+示例：
+  /运势 INFP
+  /运势 INFP 1999-05-20
+  /运势 INFJ 2000-01-01
+
+说明：
+  • 运势基于算法生成，确保积极向上
+  • 每日运势固定，同一用户同一天结果一致
+  • 支持16种MBTI人格类型
+  • 可选填出生日期以获得更个性化结果""",
+    type="application",
+)
+
+
 class FortuneConfig(BaseModel):
     """运势插件配置类"""
     
@@ -44,26 +65,6 @@ class FortuneConfig(BaseModel):
 
 # 获取插件配置
 plugin_config = get_plugin_config(FortuneConfig)
-
-__plugin_meta__ = PluginMetadata(
-    name="fortune",
-    description="MBTI运势测试插件 - 基于算法生成积极向上的运势",
-    usage="""用法：
-  /运势 [MBTI类型] [出生日期(可选)]
-  /今日运势 [MBTI类型]
-
-示例：
-  /运势 INFP
-  /运势 INFP 1999-05-20
-  /运势 INFJ 2000-01-01
-
-说明：
-  • 运势基于算法生成，确保积极向上
-  • 每日运势固定，同一用户同一天结果一致
-  • 支持16种MBTI人格类型
-  • 可选填出生日期以获得更个性化结果""",
-    type="application",
-)
 
 # 运势维度定义
 FORTUNE_DIMENSIONS = [

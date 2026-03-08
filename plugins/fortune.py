@@ -16,6 +16,10 @@ except ImportError:
     OPENAI_AVAILABLE = False
     logger.warning("openai 库未安装，运势润色功能将不可用")
 
+from nonebot import require
+require("nonebot_plugin_mbtistats")
+from nonebot_plugin_mbtistats.analyze import parse_mbti_from_text
+
 
 class FortuneConfig(BaseModel):
     """运势插件配置类"""
@@ -342,6 +346,7 @@ async def handle_fortune(bot: Bot, event: Event, args: Message = CommandArg()):
     # 解析参数
     parts = text.split()
     mbti_type = None
+    fuzzy_type = False
     birth_date = None
     
     for part in parts:
@@ -362,11 +367,21 @@ async def handle_fortune(bot: Bot, event: Event, args: Message = CommandArg()):
     if not mbti_type:
         try:
             if hasattr(event, 'sender') and event.sender:
-                nickname = getattr(event.sender, 'nickname', '') or getattr(event.sender, 'card', '')
-                import re
-                mbti_match = re.search(r'\b([IE][NS][TF][JP])\b', nickname.upper())
-                if mbti_match:
-                    mbti_type = mbti_match.group(1)
+                nickname = getattr(event.sender, 'card', '') or getattr(event.sender, 'nickname', '')
+                mbti_data = parse_mbti_from_text(nickname)
+                if mbti_data:
+                    mbti_type = (
+                        ("E" if mbti_data["EI"]["E"] else "I")
+                        + ("S" if mbti_data["SN"]["S"] else "N")
+                        + ("T" if mbti_data["TF"]["T"] else "F")
+                        + ("J" if mbti_data["JP"]["J"] else "P")
+                    )
+                    fuzzy_type = (
+                        (mbti_data["EI"]["E"] and mbti_data["EI"]["I"])
+                        or (mbti_data["SN"]["S"] and mbti_data["SN"]["N"])
+                        or (mbti_data["TF"]["T"] and mbti_data["TF"]["F"])
+                        or (mbti_data["JP"]["J"] and mbti_data["JP"]["P"])
+                    )
         except:
             pass
     
@@ -379,6 +394,16 @@ async def handle_fortune(bot: Bot, event: Event, args: Message = CommandArg()):
         )
         return
     
+    if fuzzy_type:
+        await fortune_cmd.finish(
+            "哎呀，你的MBTI类型是模糊类型，我不太好进行运势测算呐......\n"
+            "请提供你的MBTI类型～\n"
+            "用法：/运势 INFP\n"
+            "或：/运势 INFP 1999-05-20\n"
+            "也可以把MBTI类型放在群名片里，我会自动识别！"
+        )
+        return
+
     # 获取今日日期
     today = datetime.now().strftime("%Y-%m-%d")
     

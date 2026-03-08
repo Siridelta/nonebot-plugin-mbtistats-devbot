@@ -1,14 +1,11 @@
-from asyncio import sleep
-import asyncio
-import sys
-from pathlib import Path
 from datetime import datetime
 import logging
 import os
+from pathlib import Path
+
 import nonebot
 from nonebot.adapters.console import Adapter as ConsoleAdapter
-from nonebot.log import logger, default_filter, default_format
-
+from nonebot.log import logger
 
 # 创建日志目录
 log_dir = Path("logs")
@@ -36,19 +33,18 @@ print(f"日志文件已创建: {log_file.absolute()}")
 nonebot.init()
 
 # 注册 Adapters（根据环境变量决定）
-env = os.getenv("ENVIRONMENT", "console")
 driver = nonebot.get_driver()
 
-if env == "console":
+if driver.env == "console":
     driver.register_adapter(ConsoleAdapter)
     logger.info("Console mode: Only Console adapter registered")
-elif env in ["qqbot", "onebotv11", "onebotv11-wsRev"]:
-    from nonebot.adapters.qq import Adapter as QQAdapter
+elif driver.env in ["qqbot", "onebotv11", "onebotv11-wsRev"]:
     from nonebot.adapters.onebot.v11 import Adapter as OneBotV11Adapter
+    from nonebot.adapters.qq import Adapter as QQAdapter
     driver.register_adapter(QQAdapter)
     driver.register_adapter(ConsoleAdapter)
     driver.register_adapter(OneBotV11Adapter)
-    logger.info(f"{env} mode: All adapters registered")
+    logger.info(f"{driver.env} mode: All adapters registered")
 else:
     # 默认只注册 Console
     driver.register_adapter(ConsoleAdapter)
